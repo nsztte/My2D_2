@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace My2D
 {
@@ -8,6 +9,10 @@ namespace My2D
     {
         #region Variables
         private Animator animator;
+
+        //데미지 입을때 등록된 함수 호출
+        public UnityAction<float, Vector2> hitAction;   //딜리게이트 함수
+
         //체력
         [SerializeField] private float maxHealth = 100f;
         public float MaxHealth
@@ -48,7 +53,22 @@ namespace My2D
         private bool isInvicible = false;
         [SerializeField] private float invicibleTimer = 3f;
         private float countdown = 0f;
+
+
+        //넉백동안 움직임 제한
+        public bool LockVelocity
+        {
+            get
+            {
+               return animator.GetBool(AnimationString.LockVelocity);
+            }
+            private set
+            {
+                animator.SetBool(AnimationString.LockVelocity, value);
+            }
+        }
         #endregion
+
 
 
         private void Awake()
@@ -80,7 +100,7 @@ namespace My2D
             }
         }
 
-        public void TakeDamage(float damage)
+        public void TakeDamage(float damage, Vector2 knockback)
         {
             if (!IsDeath && !isInvicible)
             {
@@ -90,9 +110,29 @@ namespace My2D
                 CurrentHealth -= damage;
                 Debug.Log($"{transform.name}의 현재 체력은 {CurrentHealth}");
 
-                //애니메이션
-                animator.SetTrigger(AnimationString.HitTrigger);
+                LockVelocity = true;
+                animator.SetTrigger(AnimationString.HitTrigger);    //애니메이션
+
+                //이벤트 함수 호출
+                hitAction?.Invoke(damage, knockback);    //?: if(hitAction != null)
+                CharacterEvents.characterDamaged?.Invoke(gameObject, damage);
             }
+        }
+
+        //회복
+        public bool Heal(float amount)
+        {
+            if (CurrentHealth >= MaxHealth)
+            {
+                return false;
+            }
+
+            CurrentHealth += amount;
+            CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
+
+            CharacterEvents.characterHealed?.Invoke(gameObject, amount);
+
+            return true;
         }
     }
 }

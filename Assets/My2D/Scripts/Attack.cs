@@ -9,6 +9,8 @@ namespace My2D
         #region
         //공격력
         [SerializeField] private float attackDamage = 10f;
+
+        public Vector2 knockback = Vector2.zero;
         #endregion
 
 
@@ -20,8 +22,10 @@ namespace My2D
 
             if(damagable != null)
             {
+                //knockback 방향 설정
+                Vector2 deliveredKnockback = (transform.parent.localScale.x > 0) ? knockback : new Vector2(-knockback.x, knockback.y);  //x < 0 이면 반대 방향
                 //Debug.Log($"{collision.name} 데미지를 입었다");
-                damagable.TakeDamage(attackDamage);
+                damagable.TakeDamage(attackDamage, knockback);
             }
         }
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace My2D
 {
-    //바닥 체크, 벽 체크, 천정 체크
+    //바닥 체크, 벽 체크, 천장 체크
     public class TouchingDirections : MonoBehaviour
     {
         #region Variables
@@ -65,6 +65,7 @@ namespace My2D
 
         private void FixedUpdate()
         {
+            //바닥, 천장, 벽 체크해서 속성 값에 저장(애니메이션 AirState에 영향)
             IsGround = (touchingCollier.Cast(Vector2.down, contactFilter, groundHits, groundDistance) > 0);
             IsCeiling = (touchingCollier.Cast(Vector2.up, contactFilter, ceilingHits, ceilingDistance) > 0);
             IsWall = (touchingCollier.Cast(WalkDirection, contactFilter, wallHits, wallDistance) > 0);

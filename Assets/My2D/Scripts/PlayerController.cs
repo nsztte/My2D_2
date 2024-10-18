@@ -9,6 +9,7 @@ namespace My2D
         private Rigidbody2D rb2D;
         private Animator animator;
         private TouchingDirections touchingDirections;
+        private Damageable damageable;
 
         //플레이어 이동 속도
         [SerializeField] private float walkSpeed = 4f;
@@ -128,13 +129,19 @@ namespace My2D
             rb2D = this.GetComponent<Rigidbody2D>();
             animator = GetComponent<Animator>();
             touchingDirections = GetComponent<TouchingDirections>();
+
+            damageable = GetComponent<Damageable>();
+            damageable.hitAction += OnHit;                  //UnityAction 딜리게이트 함수에 등록(+=)
         }
 
         private void FixedUpdate()
         {
-            //플레이어 좌우 이동
-            rb2D.velocity = new Vector2(inputMove.x * CurrentMoveSpeed, rb2D.velocity.y);
-
+            if (!damageable.LockVelocity)
+            {
+                //플레이어 좌우 이동
+                rb2D.velocity = new Vector2(inputMove.x * CurrentMoveSpeed, rb2D.velocity.y);
+            }
+            
             //애니메이션 값
             animator.SetFloat(AnimationString.YVelocity, rb2D.velocity.y);
         }
@@ -173,8 +180,7 @@ namespace My2D
 
         public void OnRun(InputAction.CallbackContext context)
         {
-            //누르기 시작하는 순간
-            if(context.started)
+            if(context.started)         //누르는 순간
             {
                 IsRun = true;
             }
@@ -186,7 +192,7 @@ namespace My2D
 
         public void OnJump(InputAction.CallbackContext context)
         {
-            //누르기 시작하는 순간, 이중 점프 x
+            //누르기 시작하는 순간, 이중 점프 방지(IsGround)
             if (context.started && touchingDirections.IsGround)
             {
                 animator.SetTrigger(AnimationString.JumpTrigger);
@@ -196,11 +202,16 @@ namespace My2D
 
         public void OnAttack(InputAction.CallbackContext context)
         {
-            //마우스 클릭순간 시작하는 순간
+            //마우스 클릭 시작하는 순간
             if (context.started && touchingDirections.IsGround)
             {
                 animator.SetTrigger(AnimationString.AttackTrigger);
             }
+        }
+
+        public void OnHit(float damage, Vector2 knockback)
+        {
+            rb2D.velocity = new Vector2(knockback.x, rb2D.velocity.y + knockback.y);    //y값 중력 고려
         }
     }
 }

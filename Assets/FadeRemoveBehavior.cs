@@ -47,7 +47,7 @@ namespace My2D
             //페이드 효과 spriteRenderer.color.a : 1->0
             countdown -= Time.deltaTime;
 
-                            //알파값이 불투명할 경우 //서서히 알파값이 0이 됨
+                            //알파값이 불투명할 경우 알파값 곱함 //서서히 알파값이 0이 되도록 타이머로 나눠줌
             float newAlpha = startColor.a * (countdown / fadeTimer);   
             spriteRenderer.color = new Color(startColor.r, startColor.g, startColor.b, newAlpha);
 
