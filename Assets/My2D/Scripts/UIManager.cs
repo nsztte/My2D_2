@@ -26,7 +26,7 @@ namespace My2D
             CharacterEvents.characterHealed += CharacterHealed;
         }
 
-        private void OnDestroy()    //제거될때
+        private void OnDestroy()    //Prefab 제거될때
         {
             //캐릭터 관련 이벤트 함수 제거
             CharacterEvents.characterDamaged -= CharacterTakeDamage;
@@ -43,7 +43,7 @@ namespace My2D
             damageText.text = damage.ToString();
         }
 
-        public void CharacterHealed(GameObject character, float restore)
+        public void CharacterHealed(GameObject character, float restore)    //구현
         {
             //healTextPrefab 스폰
             Vector3 spawnPosition = Camera.main.WorldToScreenPoint(character.transform.position);   //월드 포지션을 스크린 포지션에 적용

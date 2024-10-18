@@ -11,7 +11,7 @@ namespace My2D
         private TouchingDirections touchingDirections;
         private Damageable damageable;
 
-        //ÇÃ·¹ÀÌ¾î ÀÌµ¿ ¼Óµµ
+        //í”Œë ˆì´ì–´ ì´ë™ ì†ë„
         [SerializeField] private float walkSpeed = 4f;
         [SerializeField] private float runSpeed = 8f;
         [SerializeField] private float airSpeed = 2f;
@@ -47,12 +47,12 @@ namespace My2D
                 }
                 else
                 {
-                    return 0f;  //¿òÁ÷ÀÌÁö ¸øÇÒ¶§
+                    return 0f;  //ì›€ì§ì´ì§€ ëª»í• ë•Œ
                 }
             }
         }
 
-        //ÀÌµ¿¿©ºÎ
+        //ì´ë™ì—¬ë¶€
         public bool CanMove
         {
             get
@@ -61,10 +61,10 @@ namespace My2D
             }
         }
 
-        //ÇÃ·¹ÀÌ¾î ÀÌµ¿°ú °ü·ÃµÈ ÀÔ·Â°ª
+        //í”Œë ˆì´ì–´ ì´ë™ê³¼ ê´€ë ¨ëœ ì…ë ¥ê°’
         private Vector2 inputMove;
 
-        //°È±â
+        //ê±·ê¸°
         [SerializeField] private bool isMove = false;
         public bool IsMove
         {
@@ -79,7 +79,7 @@ namespace My2D
             }
         }
 
-        //¶Ù±â
+        //ë›°ê¸°
         [SerializeField] private bool isRun = false;
         public bool IsRun
         {
@@ -94,7 +94,7 @@ namespace My2D
             }
         }
 
-        //ÁÂ¿ì ¹İÀü
+        //ì¢Œìš° ë°˜ì „
         [SerializeField] private bool isFacingRight = true;
         public bool IsFacingRight
         {
@@ -104,7 +104,7 @@ namespace My2D
             }
             set
             {
-                //¹İÀü
+                //ë°˜ì „
                 if (isFacingRight != value)
                 {
                     transform.localScale *= new Vector2(-1, 1);
@@ -113,10 +113,10 @@ namespace My2D
             }
         }
 
-        //Á¡ÇÁ
+        //ì í”„
         [SerializeField] private float jumpForce = 5f;
 
-        //Á×À½ Ã¼Å©
+        //ì£½ìŒ ì²´í¬
         public bool IsDeath
         {
             get { return animator.GetBool(AnimationString.IsDeath); }
@@ -125,38 +125,38 @@ namespace My2D
 
         private void Awake()
         {
-            //ÂüÁ¶
+            //ì°¸ì¡°
             rb2D = this.GetComponent<Rigidbody2D>();
             animator = GetComponent<Animator>();
             touchingDirections = GetComponent<TouchingDirections>();
 
             damageable = GetComponent<Damageable>();
-            damageable.hitAction += OnHit;                  //UnityAction µô¸®°ÔÀÌÆ® ÇÔ¼ö¿¡ µî·Ï(+=)
+            damageable.hitAction += OnHit;                  //UnityAction ë”œë¦¬ê²Œì´íŠ¸ í•¨ìˆ˜ì— ë“±ë¡(+=)
         }
 
         private void FixedUpdate()
         {
             if (!damageable.LockVelocity)
             {
-                //ÇÃ·¹ÀÌ¾î ÁÂ¿ì ÀÌµ¿
+                //í”Œë ˆì´ì–´ ì¢Œìš° ì´ë™
                 rb2D.velocity = new Vector2(inputMove.x * CurrentMoveSpeed, rb2D.velocity.y);
             }
             
-            //¾Ö´Ï¸ŞÀÌ¼Ç °ª
+            //ì• ë‹ˆë©”ì´ì…˜ ê°’
             animator.SetFloat(AnimationString.YVelocity, rb2D.velocity.y);
         }
 
-        //¹Ù¶óº¸´Â ¹æÇâÀ» ÀüÈ¯
+        //ë°”ë¼ë³´ëŠ” ë°©í–¥ì„ ì „í™˜
         void SetFacingDirection(Vector2 moveInput)
         {
             if(moveInput.x > 0f && IsFacingRight == false)
             {
-                //¿À¸¥ÂÊÀ» ¹Ù¶óº»´Ù
+                //ì˜¤ë¥¸ìª½ì„ ë°”ë¼ë³¸ë‹¤
                 IsFacingRight = true;
             }
             else if (moveInput.x < 0f && IsFacingRight == true)
             {
-                //¿ŞÂÊÀ» ¹Ù¶óº»´Ù
+                //ì™¼ìª½ì„ ë°”ë¼ë³¸ë‹¤
                 IsFacingRight = false;
             }
         }
@@ -173,18 +173,18 @@ namespace My2D
             {
                 IsMove = (inputMove != Vector2.zero);
 
-                //¹æÇâÀüÈ¯
+                //ë°©í–¥ì „í™˜
                 SetFacingDirection(inputMove);
             }
         }
 
         public void OnRun(InputAction.CallbackContext context)
         {
-            if(context.started)         //´©¸£´Â ¼ø°£
+            if(context.started)         //ëˆ„ë¥´ëŠ” ìˆœê°„
             {
                 IsRun = true;
             }
-            else if(context.canceled)   //¶¼´Â ¼ø°£
+            else if(context.canceled)   //ë–¼ëŠ” ìˆœê°„
             {
                 IsRun = false;
             }
@@ -192,7 +192,7 @@ namespace My2D
 
         public void OnJump(InputAction.CallbackContext context)
         {
-            //´©¸£±â ½ÃÀÛÇÏ´Â ¼ø°£, ÀÌÁß Á¡ÇÁ ¹æÁö(IsGround)
+            //ëˆ„ë¥´ê¸° ì‹œì‘í•˜ëŠ” ìˆœê°„, ì´ì¤‘ ì í”„ ë°©ì§€(IsGround)
             if (context.started && touchingDirections.IsGround)
             {
                 animator.SetTrigger(AnimationString.JumpTrigger);
@@ -202,16 +202,24 @@ namespace My2D
 
         public void OnAttack(InputAction.CallbackContext context)
         {
-            //¸¶¿ì½º Å¬¸¯ ½ÃÀÛÇÏ´Â ¼ø°£
+            //ë§ˆìš°ìŠ¤ í´ë¦­ ì‹œì‘í•˜ëŠ” ìˆœê°„
             if (context.started && touchingDirections.IsGround)
             {
                 animator.SetTrigger(AnimationString.AttackTrigger);
             }
         }
 
+        public void OnBowAttack(InputAction.CallbackContext context)
+        {
+            if(context.started && touchingDirections.IsGround)
+            {
+                animator.SetTrigger(AnimationString.BowTrigger);
+            }
+        }
+
         public void OnHit(float damage, Vector2 knockback)
         {
-            rb2D.velocity = new Vector2(knockback.x, rb2D.velocity.y + knockback.y);    //y°ª Áß·Â °í·Á
+            rb2D.velocity = new Vector2(knockback.x, rb2D.velocity.y + knockback.y);    //yê°’ ì¤‘ë ¥ ê³ ë ¤
         }
     }
 }

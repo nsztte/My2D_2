@@ -7,25 +7,25 @@ namespace My2D
     public class Attack : MonoBehaviour
     {
         #region
-        //°ø°İ·Â
+        //ê³µê²©ë ¥
         [SerializeField] private float attackDamage = 10f;
 
         public Vector2 knockback = Vector2.zero;
         #endregion
 
 
-        //Ãæµ¹ Ã¼Å©ÇØ¼­ °ø°İ·Â¸¸Å­ µ¥¹ÌÁö ÁØ´Ù
+        //ì¶©ëŒ ì²´í¬í•´ì„œ ê³µê²©ë ¥ë§Œí¼ ë°ë¯¸ì§€ ì¤€ë‹¤
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            //µ¥¹ÌÁö ÀÔ´Â °´Ã¼ Ã£±â
+            //ë°ë¯¸ì§€ ì…ëŠ” ê°ì²´ ì°¾ê¸°
             Damageable damagable = collision.GetComponent<Damageable>();
 
             if(damagable != null)
             {
-                //knockback ¹æÇâ ¼³Á¤
-                Vector2 deliveredKnockback = (transform.parent.localScale.x > 0) ? knockback : new Vector2(-knockback.x, knockback.y);  //x < 0 ÀÌ¸é ¹İ´ë ¹æÇâ
-                //Debug.Log($"{collision.name} µ¥¹ÌÁö¸¦ ÀÔ¾ú´Ù");
-                damagable.TakeDamage(attackDamage, knockback);
+                //knockback ë°©í–¥ ì„¤ì •
+                Vector2 deliveredKnockback = (transform.parent.localScale.x > 0) ? knockback : new Vector2(-knockback.x, knockback.y);  //x < 0 ì´ë©´ ë°˜ëŒ€ ë°©í–¥
+                //Debug.Log($"{collision.name} ë°ë¯¸ì§€ë¥¼ ì…ì—ˆë‹¤");
+                damagable.TakeDamage(attackDamage, deliveredKnockback);
             }
         }
 

@@ -7,20 +7,20 @@ namespace My2D
     public class PickupHealth : MonoBehaviour
     {
         #region Variables
-        //Èú
+        //í
         [SerializeField] private float restoreHealth = 20f;
         [SerializeField] private Vector3 rotateSpeed = new Vector3(0f, 180f, 0f);
         #endregion
 
         private void Update()
         {
-            //È¸Àü
+            //íšŒì „
             transform.eulerAngles += rotateSpeed * Time.deltaTime;
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            //Ãæµ¹ÇÑ ¿ÀºêÁ§Æ® damagable ¿©ºÎ °Ë»çÇÏ¿© Èú
+            //ì¶©ëŒí•œ ì˜¤ë¸Œì íŠ¸ damagable ì—¬ë¶€ ê²€ì‚¬í•˜ì—¬ í
             Damageable damageable = collision.GetComponent<Damageable>();
             if (damageable != null)
             {
@@ -28,7 +28,7 @@ namespace My2D
 
                 if (isHeal)
                 {
-                    //¾ÆÀÌÅÛ Å³
+                    //ì•„ì´í…œ í‚¬
                     Destroy(gameObject);
                 }
             }

@@ -10,10 +10,10 @@ namespace My2D
         #region Variables
         private Animator animator;
 
-        //µ¥¹ÌÁö ÀÔÀ»¶§ µî·ÏµÈ ÇÔ¼ö È£Ãâ
-        public UnityAction<float, Vector2> hitAction;   //µô¸®°ÔÀÌÆ® ÇÔ¼ö
+        //ë°ë¯¸ì§€ ì…ì„ë•Œ ë“±ë¡ëœ í•¨ìˆ˜ í˜¸ì¶œ
+        public UnityAction<float, Vector2> hitAction;   //ë”œë¦¬ê²Œì´íŠ¸ í•¨ìˆ˜
 
-        //Ã¼·Â
+        //ì²´ë ¥
         [SerializeField] private float maxHealth = 100f;
         public float MaxHealth
         {
@@ -21,7 +21,7 @@ namespace My2D
             private set { maxHealth = value; }
         }
 
-        private float currentHealth;
+        [SerializeField] private float currentHealth;
         public float CurrentHealth
         {
             get { return currentHealth; }
@@ -29,7 +29,7 @@ namespace My2D
             {
                 currentHealth = value;
 
-                //Á×À½
+                //ì£½ìŒ
                 if(currentHealth <= 0)
                 {
                     IsDeath = true;
@@ -44,18 +44,18 @@ namespace My2D
             private set
             {
                 isDeath = value;
-                //¾Ö´Ï¸ŞÀÌ¼Ç
+                //ì• ë‹ˆë©”ì´ì…˜
                 animator.SetBool(AnimationString.IsDeath, value);
             }
         }
 
-        //¹«Àû¸ğµå
+        //ë¬´ì ëª¨ë“œ
         private bool isInvicible = false;
         [SerializeField] private float invicibleTimer = 3f;
         private float countdown = 0f;
 
 
-        //³Ë¹éµ¿¾È ¿òÁ÷ÀÓ Á¦ÇÑ
+        //ë„‰ë°±ë™ì•ˆ ì›€ì§ì„ ì œí•œ
         public bool LockVelocity
         {
             get
@@ -73,27 +73,27 @@ namespace My2D
 
         private void Awake()
         {
-            //ÂüÁ¶
+            //ì°¸ì¡°
             animator = GetComponent<Animator>();
         }
 
         private void Start()
         {
-            //ÃÊ±âÈ­
+            //ì´ˆê¸°í™”
             CurrentHealth = MaxHealth;
             countdown = invicibleTimer;
         }
 
         private void Update()
         {
-            //¹«Àû»óÅÂÀÌ¸é ¹«Àû Å¸ÀÌ¸Ó¸¦ µ¹¸°´Ù
+            //ë¬´ì ìƒíƒœì´ë©´ ë¬´ì  íƒ€ì´ë¨¸ë¥¼ ëŒë¦°ë‹¤
             if (isInvicible)
             {
                 if(countdown <= 0f)
                 {
                     isInvicible = false;
 
-                    //Å¸ÀÌ¸Ó ÃÊ±âÈ­
+                    //íƒ€ì´ë¨¸ ì´ˆê¸°í™”
                     countdown = invicibleTimer;
                 }
                 countdown -= Time.deltaTime;
@@ -104,22 +104,29 @@ namespace My2D
         {
             if (!IsDeath && !isInvicible)
             {
-                //¹«Àû¸ğµå ÃÊ±âÈ­
+                //ë¬´ì ëª¨ë“œ ì´ˆê¸°í™”
                 isInvicible = true;
 
+                //ë°ë¯¸ì§€ ë°›ê¸° ì „ì˜ hp
+                float beforeHealth = CurrentHealth;
+
                 CurrentHealth -= damage;
-                Debug.Log($"{transform.name}ÀÇ ÇöÀç Ã¼·ÂÀº {CurrentHealth}");
+                CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
+                Debug.Log($"{transform.name}ì˜ í˜„ì¬ ì²´ë ¥ì€ {CurrentHealth}");
+
+                //ì‹¤ì œ ë°ë¯¸ì§€
+                float realDamage = beforeHealth - CurrentHealth;
 
                 LockVelocity = true;
-                animator.SetTrigger(AnimationString.HitTrigger);    //¾Ö´Ï¸ŞÀÌ¼Ç
+                animator.SetTrigger(AnimationString.HitTrigger);    //ì• ë‹ˆë©”ì´ì…˜
 
-                //ÀÌº¥Æ® ÇÔ¼ö È£Ãâ
+                //ì´ë²¤íŠ¸ í•¨ìˆ˜ í˜¸ì¶œ
                 hitAction?.Invoke(damage, knockback);    //?: if(hitAction != null)
-                CharacterEvents.characterDamaged?.Invoke(gameObject, damage);
+                CharacterEvents.characterDamaged?.Invoke(gameObject, realDamage);
             }
         }
 
-        //È¸º¹
+        //íšŒë³µ
         public bool Heal(float amount)
         {
             if (CurrentHealth >= MaxHealth)
@@ -127,10 +134,16 @@ namespace My2D
                 return false;
             }
 
+            //í ì „ì˜ hp
+            float beforeHealth = CurrentHealth;
+
             CurrentHealth += amount;
             CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
 
-            CharacterEvents.characterHealed?.Invoke(gameObject, amount);
+            //ì‹¤ì œ í hpê°’
+            float realHealth = CurrentHealth - beforeHealth;
+
+            CharacterEvents.characterHealed?.Invoke(gameObject, realHealth);    //ì‹¤í–‰
 
             return true;
         }

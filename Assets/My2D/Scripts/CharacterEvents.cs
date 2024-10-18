@@ -10,6 +10,6 @@ namespace My2D
         public static UnityAction<GameObject, float> characterDamaged;
 
         //캐릭터가 힐할때 등록된 함수 호출
-        public static UnityAction<GameObject, float> characterHealed;
+        public static UnityAction<GameObject, float> characterHealed;   //선언
     }
 }

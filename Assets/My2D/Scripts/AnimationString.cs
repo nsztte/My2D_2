@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace My2D
 {
-    //¾Ö´Ï¸ŞÀÌ¼Ç ÆÄ¶ó¹ÌÅÍ ÀÌ¸§À» °ü¸®ÇÏ´Â Å¬·¡½º
+    //ì• ë‹ˆë©”ì´ì…˜ íŒŒë¼ë¯¸í„° ì´ë¦„ì„ ê´€ë¦¬í•˜ëŠ” í´ë˜ìŠ¤
     public class AnimationString
     {
         public static string IsMove = "IsMove";
@@ -15,6 +15,7 @@ namespace My2D
         public static string JumpTrigger = "JumpTrigger";
         public static string HitTrigger = "HitTrigger";
         public static string AttackTrigger = "AttackTrigger";
+        public static string BowTrigger = "BowTrigger";
         public static string YVelocity = "YVelocity";
         public static string CanMove = "CanMove";
         public static string LockVelocity = "LockVelocity";
